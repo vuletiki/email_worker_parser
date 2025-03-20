@@ -10,7 +10,8 @@
     "deploy": "wrangler deploy"
   },
   "dependencies": {
-    "postal-mime": "^1.0.16",
-    "mimetext": "^3.0.10"
+    "axios": "^1.8.4",
+    "mimetext": "^3.0.10",
+    "postal-mime": "^1.0.16"
   }
 }

@@ -1,3 +1,4 @@
+import axios from "axios";
 import { EmailMessage } from "cloudflare:email";
 import { createMimeMessage } from "mimetext";
 
@@ -27,33 +28,40 @@ export default {
       console.log("Mail subject: ", parsedEmail.subject);
       console.log("Mail message ID", parsedEmail.messageId);
       console.log("HTML version of Email: ", parsedEmail.html);
-      console.log("Text version of Email: ", parsedEmail.text);
-      if (parsedEmail.attachments.length == 0) {
-        console.log("No attachments");
-      } else {
-        parsedEmail.attachments.forEach((att) => {
-          console.log("Attachment: ", att.filename);
-          console.log("Attachment disposition: ", att.disposition);
-          console.log("Attachment mime type: ", att.mimeType);
-          console.log("Attachment size: ", att.content.byteLength);
+      const payload = {
+        from: event.from,
+        to: event.to,
+        html: parsedEmail.html,
+        subject: parsedEmail.subject,
+      };
+      try {
+        await axios({
+          url: `${process.env.API_URL}/emails/worker-forward`,
+          method: "post",
+          data: payload,
+          headers: {
+            "x-api-key": process.env.API_KEY,
+          },
         });
+      } catch (e) {
+        console.log("FORWARD_FAILED", e);
       }
 
-      const msg = createMimeMessage();
-      msg.setSender({ name: "Auto-replier", addr: event.to });
-      msg.setRecipient(event.from);
-      msg.setSubject(`Re: ${parsedEmail.subject}`);
-      msg.setHeader("In-Reply-To", parsedEmail.messageId);
-      msg.addMessage({
-        contentType: "text/plain",
-        data: `This is an automated reply to your email with the subject ${parsedEmail.subject}.
-  Number of attachments: ${parsedEmail.attachments.length}.
-  
-  good bye.`,
-      });
+      //     const msg = createMimeMessage();
+      //     msg.setSender({ name: "Auto-replier", addr: event.to });
+      //     msg.setRecipient(event.from);
+      //     msg.setSubject(`Re: ${parsedEmail.subject}`);
+      //     msg.setHeader("In-Reply-To", parsedEmail.messageId);
+      //     msg.addMessage({
+      //       contentType: "text/plain",
+      //       data: `This is an automated reply to your email with the subject ${parsedEmail.subject}.
+      // Number of attachments: ${parsedEmail.attachments.length}.
 
-      var message = new EmailMessage(event.to, event.from, msg.asRaw());
-      await event.reply(message);
+      // good bye.`,
+      //     });
+
+      //     var message = new EmailMessage(event.to, event.from, msg.asRaw());
+      //     await event.reply(message);
     } catch (e) {
       console.log(e);
     }
