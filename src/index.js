@@ -36,11 +36,11 @@ export default {
       };
       try {
         await axios({
-          url: `${process.env.API_URL}/emails/worker-forward`,
+          url: `${env.API_URL}/emails/worker-forward`,
           method: "post",
           data: payload,
           headers: {
-            "x-api-key": process.env.API_KEY,
+            "x-api-key": env.API_KEY,
           },
         });
       } catch (e) {
