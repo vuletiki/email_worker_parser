@@ -28,7 +28,7 @@ export default {
       const payload = {
         from: event.from,
         to: event.to,
-        html: parsedEmail.html,
+        html: parsedEmail.html || parsedEmail.text,
         subject: parsedEmail.subject,
       };
       try {
