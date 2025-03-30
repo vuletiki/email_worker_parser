@@ -34,6 +34,7 @@ export default {
       try {
         await axios({
           url: `${env.API_URL}/emails/worker-forward`,
+          maxRedirects: 0,
           method: "post",
           data: payload,
           headers: {
