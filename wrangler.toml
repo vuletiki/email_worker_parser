@@ -5,7 +5,7 @@ compatibility_date = "2024-09-23"
 
 [vars]
 API_KEY = "123456"
-API_URL = "https://forgetmail-api-529748222931.asia-southeast1.run.app"
+API_URL = "https://api.4getmail.click"
 
 [observability]
 enabled = true
